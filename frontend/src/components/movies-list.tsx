@@ -1,5 +1,5 @@
 import { useEffect, useState, type ChangeEvent } from "react";
-import { MovieDataService } from " .. /services/movies";
+import { MovieDataService } from "../services/movies";
 import { Link } from "react-router-dom";
 
 type MovieListItem = {
@@ -36,26 +36,36 @@ const MoviesList = () => {
     });
 
     const retrieveMovies = async (page: number) => {
-try {
-const response = await MovieDataService.getAll(page);
-const data = response.data as MoviesResponse;
-}
-setMovies(data.movies);
-setCurrentPage(data.page);
-setEntriesPerPage(data.entries_per_page);
-catch (e) {
-    console.error(e);
-}
+        try {
+            const response = await MovieDataService.getAll(page);
+            const data = response.data as MoviesResponse;
+
+            setMovies(data.movies);
+            setCurrentPage(data.page);
+            setEntriesPerPage(data.entries_per_page);
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
+    const retrieveRatings = async () => {
+        try {
+            const response = await MovieDataService.getRating();
+            setRatings(["All Ratings", ...response.data]);
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
+    const onChangeSearchTitle = (e: ChangeEvent<HTMLInputElement>) => {
+        setSearchTitle(e.target.value);
+    };
+
+    const onChangeSearchRating = (e: ChangeEvent<HTMLSelectElement>) => {
+        setSearchRating(e.target.value);
+    };
+
+    return null;
 };
 
-const retrieveRatings = async () => {
-try {
-const response = await MovieDataService.getRating();
-
-setRatings(["All Ratings", ... response.data]);
-} catch (e) {
-console.error(e);
-}},
-
-}
-
+export default MoviesList;
