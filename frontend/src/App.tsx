@@ -1,41 +1,52 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
 import './App.css'
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
+import 'bootstrap/dist/css/bootstrap.min.css'
+import Container from 'react-bootstrap/Container'
+import Nav from 'react-bootstrap/Nav'
+import Navbar from 'react-bootstrap/Navbar'
+import NavDropdown from 'react-bootstrap/NavDropdown'
+import { Link, Route, Routes } from 'react-router-dom'
+import MoviesList from './components/movies-list'
+import Movie from './components/movies'
+import AddReview from './components/add-reviews'
+import Login from './components/login'
+
+type User = LoginFormData;
+type UserState = User | null;
 
 function App() {
+const [user, setUser] = useState<UserState>(null);
 
+function login(data: User) {
+setUser(data);
+}
+function logout() {
+setUser(null);
+}
   return (
-    <div className='App'>
+    <div className="App">
       <Navbar expand="lg" className="bg-body-tertiary">
         <Container>
-          <Navbar.Brand href="#home">Movie reviews</Navbar.Brand>
+          <Navbar.Brand as={Link} to="/">Movie reviews</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link href="#home">Movies</Nav.Link>
-              <Nav.Link href="#link">Login/Logout</Nav.Link>
-              <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.2">
-                  Another action
-                </NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="#action/3.4">
-                  Separated link
-                </NavDropdown.Item>
-              </NavDropdown>
+              <Nav.Link as={Link} to="/movies">Movies</Nav.Link>
+              <Nav.Link as={Link} to="/login">{user ? 'Logout' : 'Login'}</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
+
+      <Routes>
+        <Route path="/" element={<MoviesList />} />
+        <Route path="/movies" element={<MoviesList />} />
+        <Route path="/movies/:id/review" element={<AddReview user={user} />} />
+        <Route path="/movies/:id" element={<Movie user={user} />} />
+        <Route path="/login" element={<Login login={login} />} />
+      </Routes>
     </div>
   )
 }
+
 export default App
