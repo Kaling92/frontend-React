@@ -35,5 +35,27 @@ const MoviesList = () => {
         rating: "",
     });
 
+    const retrieveMovies = async (page: number) => {
+try {
+const response = await MovieDataService.getAll(page);
+const data = response.data as MoviesResponse;
+}
+setMovies(data.movies);
+setCurrentPage(data.page);
+setEntriesPerPage(data.entries_per_page);
+catch (e) {
+    console.error(e);
+}
 };
+
+const retrieveRatings = async () => {
+try {
+const response = await MovieDataService.getRating();
+
+setRatings(["All Ratings", ... response.data]);
+} catch (e) {
+console.error(e);
+}},
+
+}
 
